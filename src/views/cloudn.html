@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CloudN</title>
+    </head>
+    <body style="zoom: 200%">
+        <h1>CLOUDN</h1>
+        <!-- <svg height="100" width="30">
+            <polygon points="23,0 25,100 28,100 26,0" style="fill:lime;stroke:purple;stroke-width:1" />
+        </svg> -->
+        <canvas id="myCanvas" width="200" height="120" style="border:1px solid #000000;">
+            Your browser does not support the HTML5 canvas tag.
+        </canvas>
+        <inputs>
+            <p>
+                Temperture(15~35) :
+                <input type="text" name="temperture" pattern="^[0-9]{1,3}(.[0-9]{1})*$" size="3" onchange="checkTempDiff(this)" required/>
+            </p>
+            <p>
+                Humidity(0~100) :
+                <input type="text" name="humidity" pattern="^[0-9]{1,3}(.[0-9]{1})*$" size="3" onchange="checkHumiDiff(this)" required/>
+            </p>
+            <button type="button" name="checkout" onclick="checkInside()">In/Out</button>
+        </inputs>
+        <outputs>
+            <p>
+                In or Out from polygon : 
+                <io id="io">NAN</io>
+            </p>
+            <p>
+                Difference from point(26, 50) :
+                <p>
+                Temperature : 
+                <temperature id="temp">NAN</temperature>
+                </br>
+                Humidity: 
+                <humidity id="humi">NAN</humidity>
+            </p>
+        </outputs>
+        <script>   
+            var pointToComp = [26, 50]         
+            var canvas, ctx, temp, humi = null;         
+            
+            function set() {
+                canvas = document.getElementById('myCanvas');
+
+                if (canvas.getContext) {
+                    ctx = canvas.getContext('2d');
+                    drawBase();
+                }
+            }
+
+            function drawBase() {
+                ctx.beginPath();
+                ctx.moveTo(80, 10);
+                ctx.lineTo(100, 110);
+                ctx.lineTo(130, 110);
+                ctx.lineTo(110, 10);
+                ctx.lineTo(80, 10);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.fillStyle = "red";
+                ctx.arc(110, 60, 1, 0, 2 * Math.PI, true);
+                ctx.fill();
+            }
+
+            function linearFunc1(y){
+                var x = (y/-50) + 25
+                return x;
+            }
+
+            function linearFunc2(y){
+                var x = (y/-50 ) + 28
+                return x;
+            }
+
+            function inside(x, y) {
+                if (23 <= x && x < 26) {
+                    innerX= linearFunc1(y)
+
+                    return (innerX <= x)
+                } else if (x >= 26) {
+                    innerX = linearFunc1(y)
+                    innerX2 = linearFunc2(y)
+                    return (innerX <= x && x <= innerX2)
+                }
+
+                return false;
+            }
+
+            function checkTempDiff(temperture){
+                temp = temperture.value;
+                document.getElementById("temp").innerHTML = Number((pointToComp[0] - temp).toFixed(1))
+            }
+
+            function checkHumiDiff(humidity){
+                humi = humidity.value;
+                document.getElementById("humi").innerHTML = Number((pointToComp[1] - humi).toFixed(1))
+            }
+
+            function checkInside(){
+                if(temp == -1 || humi == -1) {
+                    alert("Please give values first")
+                }
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                drawBase();
+
+                ctx.beginPath();
+                ctx.fillStyle = "blue";
+                x = (temp * 10) - 150;
+                y = 110 - humi;
+                ctx.arc(x, y, 1, 0, 2 * Math.PI, true);
+                ctx.fill();
+                
+                if (inside(temp, humi)){
+                    document.getElementById("io").innerHTML = "In!"
+                }else{
+                    document.getElementById("io").innerHTML = "Out!"
+                }
+            }
+
+            set();
+        </script>
+    </body>
+</html>
