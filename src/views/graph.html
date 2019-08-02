@@ -3,10 +3,10 @@
 
     <head>
         <meta charset="utf-8">
-        <title>math.js | plot</title>
-        <script src="https://unpkg.com/mathjs@6.0.3/dist/math.min.js"></script>
-
-        <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+        <title>CloudN</title>
+        <script src="lib/math.min.js"></script>
+        <script src="lib/plotly-1.35.2.min.js"></script>
+        <script src="index.js"></script>
 
         <style>
             input[type=text] {
@@ -137,8 +137,10 @@
                         type: 'scatter'
                     }
 
+                    const layout = getLayoutForComfortRegion();
+
                     const data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
-                    Plotly.newPlot('plot', data)
+                    Plotly.newPlot('plot', data, layout)
                 } catch (err) {
                     console.error(err)
                     alert(err)
