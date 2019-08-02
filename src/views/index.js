@@ -15,7 +15,7 @@ let comfortZoneHumi2 = 60;
 
 // Graph axes ranges
 let xRange_start = 10;
-let xRange_end = 50;
+let xRange_end = 40;
 let yRange_start = 0;
 let yRange_end = 0.06;
 
@@ -99,77 +99,131 @@ function draw(t, f, h) {
         const yValues9 = xValues.map((x) => { return calculateY(x, 90, h); });
         const yValues10 = xValues.map((x) => { return calculateY(x, 100, h); });
 
-        const comfort_zone_xValues1 = math.range(22, 25, 0.5).toArray();
-        const comfort_zone_xValues2 = math.range(22, 25, 0.5).toArray();
+        const comfort_zone_xValues1 = math.range(22, 25.5, 0.5).toArray();
+        const comfort_zone_xValues2 = math.range(22, 25.5, 0.5).toArray();
         const comfort_zone_yValues1 = comfort_zone_xValues1.map((x) => { return calculateY(x, comfortZoneHumi1, h); });
         const comfort_zone_yValues2 = comfort_zone_xValues2.map((x) => { return calculateY(x, comfortZoneHumi2, h); });
+        const comfort_zone_midX = 23.5
+        const comfort_zone_midY = calculateY(comfort_zone_midX, 50, h);
+
+        var current_yValue = calculateY(t, f, h);
 
         // render the plot using plotly
         const trace1 = {
             x: xValues,
             y: yValues1,
             name: 'humidity 10%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
 
         const trace2 = {
             x: xValues,
             y: yValues2,
             name: 'humidity 20%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace3 = {
             x: xValues,
             y: yValues3,
             name: 'humidity 30%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace4 = {
             x: xValues,
             y: yValues4,
             name: 'humidity 40%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace5 = {
             x: xValues,
             y: yValues5,
             name: 'humidity 50%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace6 = {
             x: xValues,
             y: yValues6,
             name: 'humidity 60%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace7 = {
             x: xValues,
             y: yValues7,
             name: 'humidity 70%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace8 = {
             x: xValues,
             y: yValues8,
             name: 'humidity 80%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace9 = {
             x: xValues,
             y: yValues9,
             name: 'humidity 90%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
         }
         const trace10 = {
             x: xValues,
             y: yValues10,
             name: 'humidity 100%',
-            type: 'scatter'
+            type: 'lines',
+            marker:{
+                color : '#C0C0C0'
+            }
+        }
+        const mid_val = {
+            x: [comfort_zone_midX],
+            y: [comfort_zone_midY],
+            name: 'mid value',
+            type: 'makers',
+            marker:{
+                color : '#111E6C',
+                size: 7
+            }
+        }
+        const current_val = {
+            x: [t],
+            y: [current_yValue],
+            name: 'current value',
+            type: 'makers',
+            marker:{
+                color : '#800000',
+                size: 7
+            }
         }
 
         const layout = getLayoutForComfortRegion(comfort_zone_xValues1, comfort_zone_yValues1, comfort_zone_xValues2, comfort_zone_yValues2);
 
-        const data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
+        const data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10, mid_val, current_val]
         Plotly.newPlot('plot', data, layout)
     } catch (err) {
         console.error(err)

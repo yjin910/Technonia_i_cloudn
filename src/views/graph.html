@@ -35,12 +35,12 @@
 
         <form id="form">
             <label for="temperature">Temperature:</label>
-            <input type="text" id="temperature" value="26" />
+            <input type="text" id="temperature" value="26"/>
             <label for="humidity">Humidity:</label>
-            <input type="text" id="humidity" value="55" />
+            <input type="text" id="humidity" value="55"/>
             <label for="altitude">Altitude:</label>
-            <input type="text" id="altitude" value="0" />
-            <input type="submit" value="OK" />
+            <input type="text" id="altitude" value="0"/>
+            <input type="submit" value="OK" onclick="startDrawing()"/>
         </form>
 
         <div id="plot"></div>
@@ -52,12 +52,11 @@
             }
 
             function startDrawing() {
-                const temperature = document.getElementById('temperature').value
-                const humidity = document.getElementById('humidity').value
-                const altitude = document.getElementById('altitude').value
+                const temperature = Number(document.getElementById('temperature').value)
+                const humidity = Number(document.getElementById('humidity').value)
+                const altitude = Number(document.getElementById('altitude').value)
                 draw(temperature, humidity, altitude);
             }
-
             window.onload = startDrawing;
         </script>
 
