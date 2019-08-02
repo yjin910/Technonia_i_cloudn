@@ -46,113 +46,19 @@
         <div id="plot"></div>
 
         <script>
-            const ca = -5800.22006;
-            const cb = -5.516256;
-            const cc = -0.04864024;
-            const cd = 0.000041765;
-            const ce = -0.000000014452;
-            const cf = 6.5459673;
-            const Pvap_offset = 0.01;
-            const Y_offset = 0.62198;
-            const height_offset = 0.0000225577;
-            const height_exp = 5.25588;
-
-            function calculateY (x, f, h) {
-                let tk = x + 273.15;
-
-                var val = ca / tk + cb +cc * tk + cd * Math.pow(tk, 2) + ce * Math.pow(tk, 3) + cf * Math.log(tk)
-                var Psat = Math.exp(val);
-                var Pvap = Pvap_offset * (f / 100) * Psat;
-                var Patm = 1.01325 * Math.pow((1 - height_offset * h), height_exp);
-
-                return (Y_offset * Pvap / (Patm - Pvap));
-            }
-
-            function draw() {
-                try {
-                    // evaluate the expression repeatedly for different values of x
-                    const xValues = math.range(0, 50, 0.5).toArray()
-
-                    const yValues1 = xValues.map((x) => { return calculateY(x, 10, 0); });
-                    const yValues2 = xValues.map((x) => { return calculateY(x, 20, 0); });
-                    const yValues3 = xValues.map((x) => { return calculateY(x, 30, 0); });
-                    const yValues4 = xValues.map((x) => { return calculateY(x, 40, 0); });
-                    const yValues5 = xValues.map((x) => { return calculateY(x, 50, 0); });
-                    const yValues6 = xValues.map((x) => { return calculateY(x, 60, 0); });
-                    const yValues7 = xValues.map((x) => { return calculateY(x, 70, 0); });
-                    const yValues8 = xValues.map((x) => { return calculateY(x, 80, 0); });
-                    const yValues9 = xValues.map((x) => { return calculateY(x, 90, 0); });
-                    const yValues10 = xValues.map((x) => { return calculateY(x, 100, 0); });
-
-                    // render the plot using plotly
-                    const trace1 = {
-                        x: xValues,
-                        y: yValues1,
-                        type: 'scatter'
-                    }
-
-                    const trace2 = {
-                        x: xValues,
-                        y: yValues2,
-                        type: 'scatter'
-                    }
-                    const trace3 = {
-                        x: xValues,
-                        y: yValues3,
-                        type: 'scatter'
-                    }
-                    const trace4 = {
-                        x: xValues,
-                        y: yValues4,
-                        type: 'scatter'
-                    }
-                    const trace5 = {
-                        x: xValues,
-                        y: yValues5,
-                        type: 'scatter'
-                    }
-                    const trace6 = {
-                        x: xValues,
-                        y: yValues6,
-                        type: 'scatter'
-                    }
-                    const trace7 = {
-                        x: xValues,
-                        y: yValues7,
-                        type: 'scatter'
-                    }
-                    const trace8 = {
-                        x: xValues,
-                        y: yValues8,
-                        type: 'scatter'
-                    }
-                    const trace9 = {
-                        x: xValues,
-                        y: yValues9,
-                        type: 'scatter'
-                    }
-                    const trace10 = {
-                        x: xValues,
-                        y: yValues10,
-                        type: 'scatter'
-                    }
-
-                    const layout = getLayoutForComfortRegion();
-
-                    const data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8, trace9, trace10]
-                    Plotly.newPlot('plot', data, layout)
-                } catch (err) {
-                    console.error(err)
-                    alert(err)
-                }
-            }
-
             document.getElementById('form').onsubmit = function (event) {
                 event.preventDefault()
-                draw()
+                startDrawing();
             }
 
-            draw()
+            function startDrawing() {
+                const temperature = document.getElementById('temperature').value
+                const humidity = document.getElementById('humidity').value
+                const altitude = document.getElementById('altitude').value
+                draw(temperature, humidity, altitude);
+            }
+
+            window.onload = startDrawing;
         </script>
 
     </body>
