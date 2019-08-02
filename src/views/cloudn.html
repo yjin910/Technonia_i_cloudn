@@ -43,13 +43,11 @@
             
             function set() {
                 canvas = document.getElementById('myCanvas');
-
                 if (canvas.getContext) {
                     ctx = canvas.getContext('2d');
                     drawBase();
                 }
             }
-
             function drawBase() {
                 ctx.beginPath();
                 ctx.moveTo(80, 10);
@@ -58,47 +56,38 @@
                 ctx.lineTo(110, 10);
                 ctx.lineTo(80, 10);
                 ctx.stroke();
-
                 ctx.beginPath();
                 ctx.fillStyle = "red";
                 ctx.arc(110, 60, 1, 0, 2 * Math.PI, true);
                 ctx.fill();
             }
-
             function linearFunc1(y){
                 var x = (y/-50) + 25
                 return x;
             }
-
             function linearFunc2(y){
                 var x = (y/-50 ) + 28
                 return x;
             }
-
             function inside(x, y) {
                 if (23 <= x && x < 26) {
                     innerX= linearFunc1(y)
-
                     return (innerX <= x)
                 } else if (x >= 26) {
                     innerX = linearFunc1(y)
                     innerX2 = linearFunc2(y)
                     return (innerX <= x && x <= innerX2)
                 }
-
                 return false;
             }
-
             function checkTempDiff(temperture){
                 temp = temperture.value;
                 document.getElementById("temp").innerHTML = Number((pointToComp[0] - temp).toFixed(1))
             }
-
             function checkHumiDiff(humidity){
                 humi = humidity.value;
                 document.getElementById("humi").innerHTML = Number((pointToComp[1] - humi).toFixed(1))
             }
-
             function checkInside(){
                 if(temp == -1 || humi == -1) {
                     alert("Please give values first")
@@ -106,7 +95,6 @@
                 
                 ctx.clearRect(0, 0, canvas.width, canvas.height)
                 drawBase();
-
                 ctx.beginPath();
                 ctx.fillStyle = "blue";
                 x = (temp * 10) - 150;
@@ -120,7 +108,6 @@
                     document.getElementById("io").innerHTML = "Out!"
                 }
             }
-
             set();
         </script>
     </body>

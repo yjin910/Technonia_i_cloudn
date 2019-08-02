@@ -28,6 +28,13 @@
             form {
                 margin: 20px 0;
             }
+            
+            #io {
+                position:fixed;
+                left: 80px;
+                font-size: 30px;
+                /* top : 20px; */
+            }
         </style>
     </head>
 
@@ -45,6 +52,15 @@
 
         <div id="plot"></div>
 
+        <div id="io">
+            dT :  
+            <label id="dT">-2.5</label>
+            °C
+            &nbsp;
+            dH: 
+            <label id="dH">-5</label>
+            %
+        </div>
         <script>
             document.getElementById('form').onsubmit = function (event) {
                 event.preventDefault()
@@ -55,8 +71,16 @@
                 const temperature = Number(document.getElementById('temperature').value)
                 const humidity = Number(document.getElementById('humidity').value)
                 const altitude = Number(document.getElementById('altitude').value)
+
                 draw(temperature, humidity, altitude);
+
+                const dT = getDT(temperature);
+                const dH = getDH(humidity);
+
+                document.getElementById('dT').innerHTML = dT;
+                document.getElementById('dH').innerHTML = dH;
             }
+
             window.onload = startDrawing;
         </script>
 

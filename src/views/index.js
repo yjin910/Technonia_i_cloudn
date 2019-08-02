@@ -13,9 +13,13 @@ const height_exp = 5.25588;
 let comfortZoneHumi1 = 40;
 let comfortZoneHumi2 = 60;
 
+// mid temperature and humidity values
+const comfort_zone_midT = 23.5
+const comfort_zone_midF = 50
+
 // Graph axes ranges
 let xRange_start = 10;
-let xRange_end = 40;
+let xRange_end = 50;
 let yRange_start = 0;
 let yRange_end = 0.06;
 
@@ -83,6 +87,14 @@ function calculateY(x, f, h) {
     return (Y_offset * Pvap / (Patm - Pvap));
 }
 
+function getDT(t){
+    return comfort_zone_midT - t
+}
+
+function getDH(f){
+    return comfort_zone_midF - f
+}
+
 function draw(t, f, h) {
     try {
         // evaluate the expression repeatedly for different values of x
@@ -103,10 +115,9 @@ function draw(t, f, h) {
         const comfort_zone_xValues2 = math.range(22, 25.5, 0.5).toArray();
         const comfort_zone_yValues1 = comfort_zone_xValues1.map((x) => { return calculateY(x, comfortZoneHumi1, h); });
         const comfort_zone_yValues2 = comfort_zone_xValues2.map((x) => { return calculateY(x, comfortZoneHumi2, h); });
-        const comfort_zone_midX = 23.5
-        const comfort_zone_midY = calculateY(comfort_zone_midX, 50, h);
-
-        var current_yValue = calculateY(t, f, h);
+        const comfort_zone_midY = calculateY(comfort_zone_midT, comfort_zone_midF, h);
+        
+        const current_yValue = calculateY(t, f, h);
 
         // render the plot using plotly
         const trace1 = {
@@ -201,7 +212,7 @@ function draw(t, f, h) {
             }
         }
         const mid_val = {
-            x: [comfort_zone_midX],
+            x: [comfort_zone_midT],
             y: [comfort_zone_midY],
             name: 'mid value',
             type: 'makers',
