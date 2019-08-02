@@ -34,82 +34,55 @@
     <body>
 
         <form id="form">
-            <label for="eq1">Enter an equation:</label>
-            <input type="text" id="eq1"
-                value="0.3 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))" />
-            <input type="submit" value="Draw" />
+            <label for="temperature">Temperature:</label>
+            <input type="text" id="temperature" value="26" />
+            <label for="humidity">Humidity:</label>
+            <input type="text" id="humidity" value="55" />
+            <label for="altitude">Altitude:</label>
+            <input type="text" id="altitude" value="0" />
+            <input type="submit" value="OK" />
         </form>
 
         <div id="plot"></div>
 
-        <p>
-            Used plot library: <a href="https://plot.ly/javascript/">Plotly</a>
-        </p>
-
         <script>
+            const ca = -5800.22006;
+            const cb = -5.516256;
+            const cc = -0.04864024;
+            const cd = 0.000041765;
+            const ce = -0.000000014452;
+            const cf = 6.5459673;
+            const Pvap_offset = 0.01;
+            const Y_offset = 0.62198;
+            const height_offset = 0.0000225577;
+            const height_exp = 5.25588;
+
+            function calculateY (x, f, h) {
+                let tk = x + 273.15;
+
+                var val = ca / tk + cb +cc * tk + cd * Math.pow(tk, 2) + ce * Math.pow(tk, 3) + cf * Math.log(tk)
+                var Psat = Math.exp(val);
+                var Pvap = Pvap_offset * (f / 100) * Psat;
+                var Patm = 1.01325 * Math.pow((1 - height_offset * h), height_exp);
+
+                return (Y_offset * Pvap / (Patm - Pvap));
+            }
+
             function draw() {
                 try {
-                    // compile the expression once
-                    // const expression = document.getElementById('eq1').value
-                    // const expr = math.compile(expression)
-
-                    const expr = math.compile("0.62198 * (0.1 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.1 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr2 = math.compile("0.62198 * (0.2 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.2 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr3 = math.compile("0.62198 * (0.3 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.3 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr4 = math.compile("0.62198 * (0.4 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.4 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr5 = math.compile("0.62198 * (0.5 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.5 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr6 = math.compile("0.62198 * (0.6 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.6 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr7 = math.compile("0.62198 * (0.7 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.7 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr8 = math.compile("0.62198 * (0.8 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.8 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr9 = math.compile("0.62198 * (0.9 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.9 * 0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
-                    const expr10 = math.compile("0.62198 * (0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))) / (1.01325 - (0.01 * exp((-5800.22006)/(273.15+x)+(-5.516256)+(-0.04864024)*(273.15+x)+(0.000041765)*((273.15+x)^2)+(-0.000000014452)*((273.15+x)^3)+(6.5459673)*(log((273.15+x))))))")
-
                     // evaluate the expression repeatedly for different values of x
                     const xValues = math.range(0, 50, 0.5).toArray()
-                    const yValues1 = xValues.map(function (x) {
-                        return expr.evaluate({ x: x })
-                    })
 
-                    const yValues2 = xValues.map(function (x) {
-                        return expr2.evaluate({ x: x })
-                    })
-
-                    const yValues3 = xValues.map(function (x) {
-                        return expr3.evaluate({ x: x })
-                    })
-
-                    const yValues4 = xValues.map(function (x) {
-                        return expr4.evaluate({ x: x })
-                    })
-
-                    const yValues5 = xValues.map(function (x) {
-                        return expr5.evaluate({ x: x })
-                    })
-
-                    const yValues6 = xValues.map(function (x) {
-                        return expr6.evaluate({ x: x })
-                    })
-                    const yValues7 = xValues.map(function (x) {
-                        return expr7.evaluate({ x: x })
-                    })
-                    const yValues8 = xValues.map(function (x) {
-                        return expr8.evaluate({ x: x })
-                    })
-                    const yValues9 = xValues.map(function (x) {
-                        return expr9.evaluate({ x: x })
-                    })
-                    const yValues10 = xValues.map(function (x) {
-                        return expr10.evaluate({ x: x })
-                    })
+                    const yValues1 = xValues.map((x) => { return calculateY(x, 10, 0); });
+                    const yValues2 = xValues.map((x) => { return calculateY(x, 20, 0); });
+                    const yValues3 = xValues.map((x) => { return calculateY(x, 30, 0); });
+                    const yValues4 = xValues.map((x) => { return calculateY(x, 40, 0); });
+                    const yValues5 = xValues.map((x) => { return calculateY(x, 50, 0); });
+                    const yValues6 = xValues.map((x) => { return calculateY(x, 60, 0); });
+                    const yValues7 = xValues.map((x) => { return calculateY(x, 70, 0); });
+                    const yValues8 = xValues.map((x) => { return calculateY(x, 80, 0); });
+                    const yValues9 = xValues.map((x) => { return calculateY(x, 90, 0); });
+                    const yValues10 = xValues.map((x) => { return calculateY(x, 100, 0); });
 
                     // render the plot using plotly
                     const trace1 = {
