@@ -23,6 +23,28 @@ let xRange_end = 50;
 let yRange_start = 0;
 let yRange_end = 0.06;
 
+document.getElementById('form').onsubmit = function (event) {
+    event.preventDefault()
+    startDrawing();
+}
+
+function startDrawing() {
+    const temperature = Number(document.getElementById('temperature').value)
+    const humidity = Number(document.getElementById('humidity').value)
+    const altitude = Number(document.getElementById('altitude').value)
+
+    draw(temperature, humidity, altitude);
+
+    const dT = getDT(temperature);
+    const dH = getDH(humidity);
+
+    document.getElementById('dT').innerHTML = dT;
+    document.getElementById('dH').innerHTML = dH;
+}
+
+window.onload = startDrawing;
+
+
 
 function getBorderString(comfort_zone_xValues1, comfort_zone_yValues1, comfort_zone_xValues2, comfort_zone_yValues2) {
     let str = ' M ' + comfort_zone_xValues1[0] + ' ' + comfort_zone_yValues1[0];
